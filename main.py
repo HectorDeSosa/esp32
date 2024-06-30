@@ -67,7 +67,7 @@ def sub_cb(topic, msg, retained):
                 print(f"Modo {banmodo}")
         elif topicodeco== "rele1":
                 banrele= msgdeco.upper()
-                if parametros['modo']=="manual":
+                if parametros['modo1']=="manual":
                     if banrele == "ON":
                         rele1.value(1)
                         print("Rele encendido")
@@ -76,7 +76,7 @@ def sub_cb(topic, msg, retained):
                         print("Rele apagado")
         elif topicodeco== "rele2":
                 banrele= msgdeco.upper()
-                if parametros['modo']=="manual":
+                if parametros['modo2']=="manual":
                     if banrele == "ON":
                         rele2.value(1)
                         print("Rele encendido")
@@ -114,17 +114,17 @@ async def monitoreo():
             if parametros['modo1'] == "automatico":
                 if parametros['temperatura'] > parametros['setpoint1']:
                     parametros['rele1'] = 'ON'
-                    rele1.value(0)  # enciende rele
+                    rele1.value(1)  # enciende rele
                 else:
                     parametros['rele1'] = 'OFF'
-                    rele1.value(1)  # apaga rele
+                    rele1.value(0)  # apaga rele
             if parametros['modo2'] == "automatico":
                 if parametros['temperatura'] > parametros['setpoint2']:
                     parametros['rele2'] = 'ON'
-                    rele2.value(0)  # enciende rele
+                    rele2.value(1)  # enciende rele
                 else:
                     parametros['rele2'] = 'OFF'
-                    rele2.value(1)  # apaga rele
+                    rele2.value(0)  # apaga rele
         except Exception as e:
             print(f"Error en monitoreo: {e}")
         
