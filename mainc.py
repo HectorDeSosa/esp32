@@ -66,7 +66,7 @@ async def recibir(e):
 async def enviar(e, peer):
     while True:
         try:
-            datos = {'t': parametros['temperatura'], 'h': parametros['humedad'], 'p': parametros['periodo']}
+            datos = {'t': parametros['temperatura'], 'h': parametros['humedad']}
             await e.asend(peer, json.dumps(datos).encode('utf-8'), True)
             print("Datos enviados correctamente")
         except Exception as e:

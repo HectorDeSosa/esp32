@@ -90,20 +90,24 @@ def sub_cb(topic, msg, retained):
 async def wifi_han(state):
     print('Wifi is ', 'up' if state else 'down')
     await asyncio.sleep(2)
-
+#como cada 30s manda los datos de temperatura y huemedad
+#tambien los leeo en el mismo tiempo.
 async def recibir(e):
     while True:
         try:
+            #se maneja asincronicamente esperando a que haya datospara ser leidos
+            #reanuda el bucle solo cuando hay nuevos datos disponibles
             async for mac, msg in e:
                 # Decodifica el bytearray a una cadena
                 # Convierte la cadena JSON a un diccionario
-                datos = json.loads(msg).decode('utf-8')
+                datos = json.loads(msg.decode('utf-8'))
                 parametros['temperatura']=datos['t']
                 parametros['humedad']=datos['h']
-                parametros['periodo']=datos['p']
+                print("recibiendo")
         except Exception as ex:
             print(f"Error: {ex}")
-        await asyncio.sleep(parametros['periodo'])
+        #await asyncio.sleep(5)
+
 async def enviar (e, peer):
     while True:
         #print("enviar servidor")  
@@ -116,7 +120,7 @@ async def publicar(client):
     while True:
         try:
             #await client.publish(f"hector/{CLIENT_ID}", json.dumps(parametros), qos=1)
-            print(parametros)
+            print("parametros")
         except OSError as e:
             print(f"Fallo al publicar: {e}")
         await asyncio.sleep(parametros['periodo'])  # Esperar según el periodo definido
