@@ -43,8 +43,8 @@ parametros={
     }
 
 #sensor
-d = dht.DHT22(machine.Pin(13))
-#25 anterior
+d = dht.DHT22(machine.Pin(25))
+
 
 #led
 led = machine.Pin(27, machine.Pin.OUT)
@@ -55,7 +55,7 @@ led.value(0)# activo en alto
 rele= machine.Pin(12, machine.Pin.OUT)
 rele.value(0) #activo en alto
 #esta apagado
-
+topic='hola'
 bandestello=False
 #modificacion de parametros
 def sub_cb(topic, msg, retained):
@@ -97,27 +97,28 @@ def sub_cb(topic, msg, retained):
             cambio=True
         else:
             print("Modo incorrecto debe ser manual/auto")
-    elif topicodeco== "rele":
+    elif topicodeco == "rele":
         banrele= msgdeco.upper()
         if parametros['modo']=="manual":
             if banrele == "ON":
                 rele.value(1)
                 print("Rele encendido")
-                
+                asyncio.create_task(manejar_led())
             elif banrele == "OFF":
                 rele.value(0)
                 print("Rele apagado")
-    elif topicodeco == 'led':
+                asyncio.create_task(manejar_led())
+    elif topicodeco == "led123":
         #solo en modo manual podes prender el led con el switch
         if parametros['modo']=="manual":
-            if banrele:
+            if msgdeco=='true':
                 rele.value(1)
                 print("Rele encendido")
-                asyncio.run(manejar_led())
-            else:
+                asyncio.create_task(manejar_led())
+            elif msgdeco == 'false':
                 rele.value(0)
                 print("Rele apagado")
-                asyncio.run(manejar_led())        
+                asyncio.create_task(manejar_led())        
     else:
         print("No hay dicho topico")
     
@@ -129,12 +130,13 @@ async def wifi_han(state):
 
 #subcripcion a los topicos 
 async def conn_han(client):
+    await client.subscribe('led123', 1)
     await client.subscribe('setpoint', 1)
     await client.subscribe('periodo', 1)
     await client.subscribe('modo', 1)
     await client.subscribe('destello', 1)
     await client.subscribe('rele', 1)
-    await client.subscribe('led', 1)
+    
 
 #lectura de temperatura y humedad
 async def monitoreo():
@@ -146,14 +148,20 @@ async def monitoreo():
             if parametros['temperatura']>parametros['setpoint']:
                 parametros['rele']='ON'
                 rele.value(1)#enciende rele
-                asyncio.run(manejar_led())
+                await manejar_led()
             else:
                 parametros['rele']='OFF'
                 rele.value(0)#apaga rele
-                asyncio.run(manejar_led())
+                await manejar_led()
+        
         print("monitoreo")
         await asyncio.sleep(7)
-
+async def manejar_led():
+    if rele.value()== 1:
+        await client.publish("led/estado",'true', qos=1)
+    else:
+        await client.publish("led/estado",'false', qos=1)
+    await asyncio.sleep(1)
 #destellará por unos segundos 
 #cuando reciba la orden "destello" por mqtt.
 async def destello():
@@ -178,12 +186,7 @@ async def main(client):
         except OSError as e:
             print(f"Fallo al publicar: {e}")
         await asyncio.sleep(parametros['periodo'])  # Esperar según el periodo definido
-async def manejar_led():
-    if rele.values():
-        await client.publish(topic = f"led/estado", payload = True, qos=1)
-    elif not rele.values():
-        await client.publish(topic = f"led/estado", payload = False, qos=1)
-    
+
 async def task(client):
     # Ejecutar monitoreo(),destello() y main() en paralelo
     await asyncio.gather(main(client), monitoreo(), destello())
