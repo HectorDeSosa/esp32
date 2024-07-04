@@ -129,7 +129,7 @@ async def enviar(e, peer):
         except Exception as e:
             print(f"Error en el envío de datos: {e}")
         
-        await asyncio.sleep(30)
+        await asyncio.sleep(parametros['periodo'])
 
 async def monitoreo():
     while True:
@@ -155,7 +155,7 @@ async def monitoreo():
         except Exception as e:
             print(f"Error en monitoreo: {e}")
         
-        await asyncio.sleep(parametros['periodo'])
+        await asyncio.sleep(20)
 
 async def main(e, peer):
     task1 = asyncio.create_task(monitoreo())
