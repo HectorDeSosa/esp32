@@ -116,6 +116,7 @@ async def recibir(e):
         try:
             async for mac, msg in e:
                 await topicos(msg)
+                print("recibido")
         except Exception as ex:
             print(f"Error: {ex}")
         await asyncio.sleep(1)
