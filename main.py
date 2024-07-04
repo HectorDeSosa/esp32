@@ -85,7 +85,7 @@ def sub_cb(topic, msg, retained):
     except Exception as e:
         print(f"Error: {e}")
     if cambio:
-        pass
+        asyncio.create_task(enviar(topicodeco,msgdeco))
 
 async def wifi_han(state):
     print('Wifi is ', 'up' if state else 'down')
@@ -108,11 +108,12 @@ async def recibir(e):
             print(f"Error: {ex}")
         await asyncio.sleep(5)
 
-async def enviar (e, peer):
-    while True:
-        #print("enviar servidor")  
-        #await e.send(peer, "Starting servidor...")
-        await asyncio.sleep(10)
+async def enviar (topicodeco, msgdeco):
+    global e 
+    global peer
+    enviados={'to':topicodeco, 'm':msgdeco}
+    await e.asend(peer,json.dumps(enviados).encode('utf-8'), True)
+
     
 async def publicar(client):
     await client.connect()
@@ -127,9 +128,8 @@ async def publicar(client):
 
 async def main(client, e, peer):
     task1 = asyncio.create_task(publicar(client))
-    task2 = asyncio.create_task(enviar(e, peer))
-    task3 = asyncio.create_task(recibir(e))
-    await asyncio.gather(task1, task2, task3)
+    task2 = asyncio.create_task(recibir(e))
+    await asyncio.gather(task1, task2)
 
 async def conn_han(client):
     await client.subscribe('setpoint1', 1)
