@@ -54,14 +54,7 @@ rele2.value(0)  # activo en alto
 
 async def recibir(e):
     while True:
-        print("recibir cliente")
-        """
-        host, msg = e.recv()
-        if msg:             # msg == None if timeout in recv()
-            print(host, msg)
-            if msg == b'end':
-                pass
-        """
+        
         await asyncio.sleep(2)
 async def enviar(e, peer):
     while True:
