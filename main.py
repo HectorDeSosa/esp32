@@ -197,7 +197,6 @@ sta.active(True)
 sta.disconnect()
 e = aioespnow.AIOESPNow() 
 e.active(True)
-e.init()
 peer = b'0\xc9"2\xf6\xcc'   # MAC address of peer's wifi interface
 e.add_peer(peer)
 try:
