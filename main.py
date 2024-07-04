@@ -24,7 +24,7 @@ CLIENT_ID = ubinascii.hexlify(unique_id()).decode('utf-8')
 parametros = OrderedDict([
     ('temperatura', 0.0),
     ('humedad', 0.0),
-    ('periodo', 3),
+    ('periodo', 30),
     ('setpoint1', 23.5),
     ('modo1', 'manual'),
     ('rele1', 'OFF'),
@@ -120,8 +120,9 @@ async def publicar(client):
     await asyncio.sleep(4) # Esperar para dar tiempo al broker
     while True:
         try:
-            #await client.publish(f"hector/{CLIENT_ID}", json.dumps(parametros), qos=1)
-            print("parametros")
+            await client.publish(f"hector/{CLIENT_ID}", json.dumps(parametros), qos=1)
+            datos={'temperatura':parametros['temperatura'] , 'humedad':parametros['humedad'] }
+            await client.publish(f"sensores_remotos/{CLIENT_ID}", json.dumps(datos),qos=1)
         except OSError as e:
             print(f"Fallo al publicar: {e}")
         await asyncio.sleep(parametros['periodo'])  # Esperar según el periodo definido
