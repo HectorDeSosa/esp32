@@ -51,16 +51,79 @@ rele1.value(0)  # activo en alto
 rele2 = machine.Pin(14, machine.Pin.OUT)
 rele2.value(0)  # activo en alto
 
+async def topicos(msg):
+    recibido = json.loads(msg.decode('utf-8'))
+    topicodeco = recibido['to']
+    msgdeco = recibido['m']
+    global parametros
+    cambio = False
+    print('Topic = {} -> Valor = {}'.format(topicodeco, msgdeco))
+    try:
+        if topicodeco == 'setpoint1':
+            parametros['setpoint1'] = float(msgdeco)
+            cambio = True
+        elif topicodeco == 'setpoint2':
+            parametros['setpoint2'] = float(msgdeco)
+            cambio = True
+        elif topicodeco == "modo1":
+            banmodo = msgdeco.lower()
+            if banmodo in ["manual", "automatico"]:
+                parametros['modo1'] = banmodo
+                cambio = True
+                print(f"Modo {banmodo}")
+        elif topicodeco == "modo2":
+            banmodo = msgdeco.lower()
+            if banmodo in ["manual", "automatico"]:
+                parametros['modo2'] = banmodo
+                cambio = True
+                print(f"Modo {banmodo}")
+        elif topicodeco== "rele1":
+                banrele= msgdeco.upper()
+                if parametros['modo1']=="manual":
+                    if banrele == "ON":
+                        parametros['rele1']=banrele
+                        cambio=True
+                        rele1.value(1)
+                        print("Rele encendido")
+                    elif banrele == "OFF":
+                        parametros['rele1']=banrele
+                        cambio=True
+                        rele1.value(0)
+                        print("Rele apagado")
+        elif topicodeco== "rele2":
+                banrele= msgdeco.upper()
+                if parametros['modo2']=="manual":
+                    if banrele == "ON":
+                        parametros['rele2']=banrele
+                        cambio=True
+                        rele2.value(1)
+                        print("Rele encendido")
+                    elif banrele == "OFF":
+                        parametros['rele2']=banrele
+                        cambio=True
+                        rele2.value(0)
+                        print("Rele apagado")
+        elif topicodeco == "periodo":
+            parametros['periodo'] = float(msgdeco)
+            cambio = True
+    except Exception as e:
+        print(f"Error: {e}")
+    if cambio:
+        escribir_db()
 
 async def recibir(e):
     while True:
-        
-        await asyncio.sleep(2)
+        try:
+            async for mac, msg in e:
+                await topicos(msg)
+        except Exception as ex:
+            print(f"Error: {ex}")
+        await asyncio.sleep(1)
 async def enviar(e, peer):
     while True:
         try:
-            datos = {'t': parametros['temperatura'], 'h': parametros['humedad']}
-            await e.asend(peer, json.dumps(datos).encode('utf-8'), True)
+            enviado = {'t': parametros['temperatura'], 'h': parametros['humedad']}
+            await e.asend(peer, json.dumps(enviado).encode('utf-8'), True)
             print("Datos enviados correctamente")
         except Exception as e:
             print(f"Error en el envío de datos: {e}")
@@ -133,6 +196,7 @@ sta.active(True)
 sta.disconnect()
 e = aioespnow.AIOESPNow() 
 e.active(True)
+e.init()
 peer = b'0\xc9"2\xf6\xcc'   # MAC address of peer's wifi interface
 e.add_peer(peer)
 try:
