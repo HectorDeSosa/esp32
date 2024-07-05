@@ -9,6 +9,7 @@ import btree
 from collections import OrderedDict
 import network
 import aioespnow
+from settings import PEER_SERVER
 #temperatura y humedad
 #setpiont es flotante 
 #periodo es flotante
@@ -24,9 +25,7 @@ print("MAC Address:", wlan_mac)
 print("MAC Address:", wlan_mac.hex())
 """
 CLIENT_ID = ubinascii.hexlify(unique_id()).decode('utf-8')
-#ESP mas nuevo entrada tipo C
-#30c92232f6cc
-#b'0\xc9"2\xf6\xcc'
+
 #print("MAC Address:", wlan_mac.hex())
 #fijar el orden del diccionario
 parametros = OrderedDict([
@@ -197,7 +196,7 @@ sta.active(True)
 sta.disconnect()
 e = aioespnow.AIOESPNow() 
 e.active(True)
-peer = b'0\xc9"2\xf6\xcc'   # MAC address of peer's wifi interface
+peer = PEER_SERVER   # MAC address of peer's wifi interface
 e.add_peer(peer)
 try:
     asyncio.run(main(e,peer))
