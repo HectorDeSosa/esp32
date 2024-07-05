@@ -10,6 +10,7 @@ import btree
 from collections import OrderedDict
 import network
 import aioespnow
+from settings import PEER_CLIENTE
 #temperatura
 #setpiont es flotante 
 #periodo es flotante
@@ -155,7 +156,7 @@ sta.active(True)
 
 e = aioespnow.AIOESPNow() 
 e.active(True)
-peer = b'x\xe3m\x18N$'   # MAC address of peer's wifi interface
+peer = PEER_CLIENTE   # MAC address of peer's wifi interface
 e.add_peer(peer)
 try:
     asyncio.run(main(client, e, peer))
