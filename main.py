@@ -136,7 +136,6 @@ async def monitoreo():
             d.measure()
             parametros['temperatura'] = d.temperature()
             parametros['humedad'] = d.humidity()
-            print(parametros['periodo'])
             if parametros['modo1'] == "automatico":
                 if parametros['temperatura'] > parametros['setpoint1']:
                     parametros['rele1'] = 'ON'
