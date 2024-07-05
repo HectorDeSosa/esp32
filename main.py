@@ -18,9 +18,7 @@ from settings import PEER_CLIENTE
 #rele ON/OFF
 
 CLIENT_ID = ubinascii.hexlify(unique_id()).decode('utf-8')
-#datos del esp entrada USB micro B/android
-#b'x\xe3m\x18N$'        str
-#78e36d184e24           hex
+
 #fijar el orden del diccionario 195 Bytes
 parametros = OrderedDict([
     ('temperatura', 0.0),
