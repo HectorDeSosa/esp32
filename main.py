@@ -92,27 +92,19 @@ async def wifi_han(state):
 #como cada 30s manda los datos de temperatura y huemedad
 #tambien los leeo en el mismo tiempo.
 async def recibir(e):
-    while True:
-        try:
-            #se maneja asincronicamente esperando a que haya datospara ser leidos
-            #reanuda el bucle solo cuando hay nuevos datos disponibles
-            async for mac, msg in e:
-                # Decodifica el bytearray a una cadena
-                # Convierte la cadena JSON a un diccionario
-                datos = json.loads(msg.decode('utf-8'))
-                parametros['temperatura']=datos['t']
-                parametros['humedad']=datos['h']
-                print("recibiendo")
-        except Exception as ex:
-            print(f"Error: {ex}")
-        await asyncio.sleep(1)
+    async for mac, msg in e:
+        # Decodifica el bytearray a una cadena
+        # Convierte la cadena JSON a un diccionario
+        datos = json.loads(msg.decode('utf-8'))
+        parametros['temperatura']=datos['t']
+        parametros['humedad']=datos['h']
+        print("recibiendo")
 
 async def enviar (topicodeco, msgdeco):
-    global e 
-    peer=b'0\xc9"2\xf6\xcc'
+    global e, peer
     enviados={'to':topicodeco, 'm':msgdeco}
     await e.asend(peer,json.dumps(enviados).encode('utf-8'), True)
-
+    print("enviando_server")
     
 async def publicar(client):
     await client.connect()
