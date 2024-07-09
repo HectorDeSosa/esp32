@@ -35,4 +35,4 @@ async def main(e, peer, timeout, period):
     asyncio.create_task(echo_server(e))
     await asyncio.sleep(timeout)
 
-asyncio.run(main(e, peer, 120, 20))
+asyncio.run(main(e, peer, 600, 20))
