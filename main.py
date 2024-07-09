@@ -101,9 +101,9 @@ async def recibir(e):
         print("recibiendo")
 
 async def enviar (topicodeco, msgdeco):
-    global e, peer
+    global e
     enviados={'to':topicodeco, 'm':msgdeco}
-    await e.asend(peer,json.dumps(enviados).encode('utf-8'), True)
+    await e.asend(b'0\xc9"2\xf6\xcc',json.dumps(enviados).encode('utf-8'))
     print("enviando_server")
     
 async def publicar(client):
