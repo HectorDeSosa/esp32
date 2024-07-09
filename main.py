@@ -109,7 +109,7 @@ async def recibir(e):
 
 async def enviar (topicodeco, msgdeco):
     global e 
-    global peer
+    peer=b'0\xc9"2\xf6\xcc'
     enviados={'to':topicodeco, 'm':msgdeco}
     await e.asend(peer,json.dumps(enviados).encode('utf-8'), True)
 
