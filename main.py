@@ -111,14 +111,12 @@ async def topicos(msg):
         escribir_db()
 
 async def recibir(e):
-    while True:
-        try:
-            async for mac, msg in e:
-                await topicos(msg)
-                print("recibido")
-        except Exception as ex:
-            print(f"Error: {ex}")
-        await asyncio.sleep(1)
+    try:
+        async for mac, msg in e:
+            await topicos(msg)
+            print("recibido")
+    except Exception as ex:
+        print(f"Error: {ex}")
 async def enviar(e, peer):
     while True:
         try:
