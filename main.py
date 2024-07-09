@@ -194,7 +194,7 @@ sta = network.WLAN(network.STA_IF)  # Or network.AP_IF
 sta.active(True)
 e = aioespnow.AIOESPNow() 
 e.active(True)
-peer = PEER_SERVER   # MAC address of peer's wifi interface
+peer = b'x\xe3m\x18N$'   # MAC address of peer's wifi interface
 e.add_peer(peer)
 try:
     asyncio.run(main(e,peer))
