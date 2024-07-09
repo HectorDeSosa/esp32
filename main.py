@@ -150,7 +150,7 @@ client = MQTTClient(config)
 # A WLAN interface must be active to send()/recv()
 sta = network.WLAN(network.STA_IF)  # Or network.AP_IF
 sta.active(True)
-#sta.disconnect()
+sta.disconnect()
 e = aioespnow.AIOESPNow()
 e.active(True)
 peer = PEER_CLIENTE   # MAC address of peer's wifi interface
