@@ -193,6 +193,7 @@ else:
 sta = network.WLAN(network.STA_IF)  # Or network.AP_IF
 sta.active(True)
 sta.disconnect()
+sta.config(pm=sta.PM_NONE)
 e = aioespnow.AIOESPNow() 
 e.active(True)
 peer = b'x\xe3m\x18N$'   # MAC address of peer's wifi interface
