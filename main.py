@@ -192,6 +192,7 @@ else:
 # A WLAN interface must be active to send()/recv()
 sta = network.WLAN(network.STA_IF)  # Or network.AP_IF
 sta.active(True)
+sta.disconnect()
 e = aioespnow.AIOESPNow() 
 e.active(True)
 peer = b'x\xe3m\x18N$'   # MAC address of peer's wifi interface
