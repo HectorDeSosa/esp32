@@ -151,9 +151,8 @@ client = MQTTClient(config)
 sta = network.WLAN(network.STA_IF)  # Or network.AP_IF
 sta.active(True)
 #sta.disconnect()
-sta.config(channel=6)
-sta.config(txpower=0)
-e = aioespnow.AIOESPNow() 
+sta.config(channel=7) #ver
+e = aioespnow.AIOESPNow()
 e.active(True)
 peer = PEER_CLIENTE   # MAC address of peer's wifi interface
 e.add_peer(peer)
