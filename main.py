@@ -121,7 +121,7 @@ async def enviar(e, peer):
     while True:
         try:
             enviado = {'t': parametros['temperatura'], 'h': parametros['humedad']}
-            await e.asend(peer, json.dumps(enviado).encode('utf-8'), True)
+            await e.asend(peer, json.dumps(enviado).encode('utf-8'))
             print("Datos enviados correctamente")
         except Exception as e:
             print(f"Error en el envío de datos: {e}")
