@@ -105,7 +105,7 @@ async def recibir(e):
                 print("recibiendo")
         except Exception as ex:
             print(f"Error: {ex}")
-        await asyncio.sleep(5)
+        await asyncio.sleep(1)
 
 async def enviar (topicodeco, msgdeco):
     global e 
