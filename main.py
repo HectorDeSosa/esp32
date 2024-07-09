@@ -1,17 +1,13 @@
 import network
-import espnow
-
+import aioespnow
+import asyncio
 # A WLAN interface must be active to send()/recv()
-sta = network.WLAN(network.STA_IF)
-sta.active(True)
-sta.disconnect()   # Because ESP8266 auto-connects to last Access Point
-
-e = espnow.ESPNow()
+network.WLAN(network.STA_IF).active(True)
+e = aioespnow.AIOESPNow()
 e.active(True)
-
-while True:
-    host, msg = e.recv()
-    if msg:             # msg == None if timeout in recv()
-        print(host, msg)
-        if msg == b'end':
-            break
+async def recv_till_halt(e):
+    async for mac, msg in e:
+        print(mac, msg)
+        if msg == b'halt':
+          break
+asyncio.run(recv_till_halt(e))
